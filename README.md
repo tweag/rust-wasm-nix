@@ -3,7 +3,9 @@
 While supporting a common workspace where a native Rust app and a Wasm app both
 work even when they need slightly different dependencies.
 
-## Cargo and separate crates (no Nix and no workspace)
+## Just Cargo (no Nix)
+
+### Cargo and separate crates (no workspace)
 
 You can verify that the native Rust app works:
 
@@ -21,7 +23,7 @@ wasm-pack test --firefox --headless
 
 Replace `--firefox` with `--chrome` or `--safari` if necessary.
 
-## Cargo and a common workspace (no Nix)
+### Cargo and a common workspace
 
 Interestingly, both apps still work:
 
@@ -34,3 +36,41 @@ cargo run
 cd variants/cargo-workspace/wasm
 wasm-pack test --firefox --headless
 ```
+
+## cargo2nix
+
+## crate2nix
+
+## dream2nix
+
+## naersk
+
+### naersk and separate crates
+
+Having a shared library next to our two apps, using a path dependency, just doesn't work in naersk. See https://github.com/nix-community/naersk/issues/133.
+
+### naersk and a workspace
+
+You can verify that the native Rust app works:
+
+```
+cd variants/naersk-workspace
+nix build
+./result/bin/app
+```
+
+And you can verify that the Wasm code also gets built:
+
+```
+cd variants/naersk-workspace
+nix build .#packages.x86_64-linux.wasm
+ls -l ./result/lib/wasm.wasm
+```
+
+Interestingly, trying to build both at the same time only leaves the default package (the native app) in the `result` directory:
+
+```
+nix build .#packages.x86_64-linux.app .#packages.x86_64-linux.wasm
+```
+
+## crane
