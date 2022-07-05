@@ -39,6 +39,23 @@ wasm-pack test --firefox --headless
 
 ## cargo2nix
 
+Following the cargo2nix instructions, we generate a `Cargo.nix` file by running:
+
+```
+nix run github:cargo2nix/cargo2nix
+git add Cargo.nix
+```
+
+Then we can simply build and run our native app like this:
+
+```
+nix run
+```
+
+However, when it comes to building the Wasm code, cargo2nix is unable to help, and it is a known issue:
+
+https://github.com/cargo2nix/cargo2nix/issues/203
+
 ## crate2nix
 
 ## dream2nix
