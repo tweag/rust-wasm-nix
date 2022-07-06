@@ -17,8 +17,12 @@
         packages = {
           app = code.app;
           wasm = code.wasm;
+          default = code.app;
+          everything = pkgs.symlinkJoin {
+            name = "everything";
+            paths = with code; [ app wasm ];
+          };
         };
 
-        defaultPackage = code.app;
       });
 }
