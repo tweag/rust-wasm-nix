@@ -28,26 +28,12 @@
         rustPkgs = pkgs.rustBuilder.makePackageSet {
           rustVersion = "1.61.0";
           packageFun = import ./Cargo.nix;
-          packageOverrides = pkgs: pkgs.rustBuilder.overrides.all ++ [
-            (pkgs.rustBuilder.rustLib.makeOverride {
-              overrideAttrs = _: {
-                __contentAddressed = true;
-              };
-            })
-          ];
         };
         
         rustPkgsWasm = wasmPkgs.rustBuilder.makePackageSet {
           rustVersion = "1.61.0";
           packageFun = import ./Cargo.nix;
           target = "wasm32-unknown-unknown";
-          packageOverrides = pkgs: pkgs.rustBuilder.overrides.all ++ [
-            (pkgs.rustBuilder.rustLib.makeOverride {
-              overrideAttrs = _: {
-                __contentAddressed = true;
-              };
-            })
-          ];
         };
 
       in rec {

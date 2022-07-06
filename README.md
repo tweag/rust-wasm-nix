@@ -63,7 +63,7 @@ So, in the end, we build our Wasm code like this:
 
 ```
 cd variants/cargo2nix-workspace
-nix build
+nix build .#wasm
 ls result/lib/wasm.wasm 
 ```
 
