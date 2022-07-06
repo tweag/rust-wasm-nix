@@ -42,6 +42,7 @@ wasm-pack test --firefox --headless
 Following the cargo2nix instructions, we generate a `Cargo.nix` file by running:
 
 ```
+cd variants/cargo2nix-workspace
 nix run github:cargo2nix/cargo2nix
 git add Cargo.nix
 ```
@@ -52,9 +53,19 @@ Then we can simply build and run our native app like this:
 nix run
 ```
 
-However, when it comes to building the Wasm code, cargo2nix is unable to help, and it is a known issue:
+However, the Wasm code does not get output by cargo2nix, and it is a known issue:
 
 https://github.com/cargo2nix/cargo2nix/issues/203
+
+After some debugging (with Alexei and Yorick) it turned out that the solution was simple, and fixed in https://github.com/cargo2nix/cargo2nix/pull/283. Until it gets merged, we run against `github:torhovland/cargo2nix/wasm`.
+
+So, in the end, we build our Wasm code like this:
+
+```
+cd variants/cargo2nix-workspace
+nix build
+ls result/lib/wasm.wasm 
+```
 
 ## crate2nix
 
