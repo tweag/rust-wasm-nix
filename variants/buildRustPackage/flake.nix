@@ -15,10 +15,10 @@
         code = pkgs.callPackage ./. { inherit rustPlatform; };
       in rec {
         packages = {          
-          app = code;
+          app = code.app;
           # app = code.app;
           # wasm = code.wasm;
-          default = code;
+          default = code.app;
           # all = pkgs.symlinkJoin {
           #   name = "all";
           #   paths = with code; [ app wasm ];
