@@ -32,6 +32,16 @@
 
         wasmTarget = "wasm32-unknown-unknown";
 
+        wasmPkgs = import nixpkgs {
+          inherit system;
+          crossSystem = {
+            config = "wasm32-unknown-wasi-unknown";
+            system = "wasm32-wasi";
+            useLLVM = true;
+          };
+          overlays = [ (import rust-overlay) ];
+        };
+
         rustWithWasmTarget = pkgs.rust-bin.stable.${rustVersion}.default.override {
             targets = [ wasmTarget ];
         };
@@ -50,7 +60,9 @@
             pkg-config
           ];
 
-          cargoExtraArgs = "-p wasm";
+          cargoCheckCommand = "cargo check --release";
+          cargoBuildCommand = "cargo build --release";
+          cargoExtraArgs = "-p wasm --target ${wasmTarget}";
           CARGO_BUILD_TARGET = wasmTarget;
 
           # Tests currently need to be run via `cargo wasi` which
