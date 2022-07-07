@@ -16,13 +16,12 @@
       in rec {
         packages = {          
           app = code.app;
-          # app = code.app;
-          # wasm = code.wasm;
-          default = code.app;
-          # all = pkgs.symlinkJoin {
-          #   name = "all";
-          #   paths = with code; [ app wasm ];
-          # };
+          wasm = code.wasm;
+          all = pkgs.symlinkJoin {
+            name = "all";
+            paths = with code; [ app wasm ];
+          };
+          default = packages.all;
         };
       });
 }
