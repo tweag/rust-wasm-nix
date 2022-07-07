@@ -22,5 +22,5 @@ pub fn greet() {
 #[wasm_bindgen]
 pub async fn cat_url() -> String {
     let cats = cats::fetch_cats().await.expect("cat response");
-    cats.into_iter().nth(0).expect("a cat in the API response").url
+    cats[0].url.to_string()
 }
