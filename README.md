@@ -37,6 +37,12 @@ cd variants/cargo-workspace/wasm
 wasm-pack test --firefox --headless
 ```
 
+## buildRustPackage
+
+Unfortunately, it isn't easy to have buildRustPackage build a WebAssembly package, because it insists on setting the `--target` flag to either the (native) host system, or to whatever you're cross-compiling against. The cross-compilation should actually work, but when configuring it Nix ends up building a Rust compiler from scratch where the target is set to WebAssembly everywhere. This eventually fails.
+
+
+
 ## cargo2nix
 
 Following the cargo2nix instructions, we generate a `Cargo.nix` file by running:

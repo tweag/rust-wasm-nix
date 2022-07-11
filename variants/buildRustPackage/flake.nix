@@ -11,8 +11,7 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        rustPlatform = pkgs.rustPlatform;
-        code = pkgs.callPackage ./. { inherit rustPlatform; };
+        code = pkgs.callPackage ./. { inherit nixpkgs system rust-overlay; };
       in rec {
         packages = {          
           app = code.app;
@@ -23,5 +22,6 @@
           };
           default = packages.all;
         };
-      });
+      }
+    );
 }
