@@ -24,5 +24,6 @@
           # default = packages.all;
           default = code.app;
         };
-      });
+      }
+    );
 }

@@ -25,7 +25,7 @@ let
   rustPkgsWasm = wasmPkgs.rustBuilder.makePackageSet {
     rustVersion = "1.61.0";
     packageFun = import ./Cargo.nix;
-    target = "wasm32-unknown-unknown";
+    target = wasmTarget;
   };
 in {
   app = (rustPkgs.workspace.app {}).bin;
