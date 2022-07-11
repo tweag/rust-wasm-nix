@@ -4,7 +4,7 @@ let
     (import rust-overlay)
   ];
 
-  rust-pkgs = import nixpkgs {
+  rustPkgs = import nixpkgs {
     inherit system overlays;
   };
 
@@ -12,7 +12,7 @@ let
 
   wasmTarget = "wasm32-unknown-unknown";
 
-  wasm-rust = rust-pkgs.rust-bin.stable.${rustVersion}.default.override {
+  wasm-rust = rustPkgs.rust-bin.stable.${rustVersion}.default.override {
     targets = [ wasmTarget ];
   };
 

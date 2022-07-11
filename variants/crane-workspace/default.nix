@@ -4,7 +4,7 @@ let
     (import rust-overlay)
   ];
 
-  rust-pkgs = import nixpkgs {
+  rustPkgs = import nixpkgs {
     inherit system overlays;
   };
 
@@ -22,7 +22,7 @@ let
     overlays = [ (import rust-overlay) ];
   };
 
-  rustWithWasmTarget = rust-pkgs.rust-bin.stable.${rustVersion}.default.override {
+  rustWithWasmTarget = rustPkgs.rust-bin.stable.${rustVersion}.default.override {
       targets = [ wasmTarget ];
   };
 
