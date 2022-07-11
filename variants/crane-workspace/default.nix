@@ -1,26 +1,23 @@
 { pkgs, nixpkgs, system, crane, rust-overlay }: 
 let
-  overlays = [
-    (import rust-overlay)
-  ];
-
   rustPkgs = import nixpkgs {
-    inherit system overlays;
+    inherit system;
+    overlays = [ (import rust-overlay) ];
   };
 
   rustVersion = "1.62.0";
 
   wasmTarget = "wasm32-unknown-unknown";
 
-  wasmPkgs = import nixpkgs {
-    inherit system;
-    crossSystem = {
-      config = "wasm32-unknown-wasi-unknown";
-      system = "wasm32-wasi";
-      useLLVM = true;
-    };
-    overlays = [ (import rust-overlay) ];
-  };
+  # wasmPkgs = import nixpkgs {
+  #   inherit system;
+  #   crossSystem = {
+  #     config = "wasm32-unknown-wasi-unknown";
+  #     system = "wasm32-wasi";
+  #     useLLVM = true;
+  #   };
+  #   overlays = [ (import rust-overlay) ];
+  # };
 
   rustWithWasmTarget = rustPkgs.rust-bin.stable.${rustVersion}.default.override {
       targets = [ wasmTarget ];

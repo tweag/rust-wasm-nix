@@ -1,35 +1,32 @@
 { pkgs, nixpkgs, system, naersk, rust-overlay }: 
 let
-  overlays = [
-    (import rust-overlay)
-  ];
-
   rustPkgs = import nixpkgs {
-    inherit system overlays;
+    inherit system;
+    overlays = [ (import rust-overlay) ];
   };
 
   rustVersion = "1.62.0";
 
   wasmTarget = "wasm32-unknown-unknown";
 
-  wasm-rust = rustPkgs.rust-bin.stable.${rustVersion}.default.override {
+  rustWithWasmTarget = rustPkgs.rust-bin.stable.${rustVersion}.default.override {
     targets = [ wasmTarget ];
   };
 
-  naersk-lib = pkgs.callPackage naersk {};
+  naerskLib = pkgs.callPackage naersk {};
 
-  wasm-naersk-lib = pkgs.callPackage naersk {
-    cargo = wasm-rust;
-    rustc = wasm-rust;
+  naerskLibWasm = pkgs.callPackage naersk {
+    cargo = rustWithWasmTarget;
+    rustc = rustWithWasmTarget;
   };
 in {
-  app = naersk-lib.buildPackage {
+  app = naerskLib.buildPackage {
     name = "app";
     src = ./.;
     nativeBuildInputs = with pkgs; [ openssl pkg-config ];
     cargoBuildOptions = x: x ++ [ "-p" "app" ];
   };
-  wasm = wasm-naersk-lib.buildPackage {
+  wasm = naerskLibWasm.buildPackage {
     name = "wasm";
     src = ./.;
     nativeBuildInputs = with pkgs; [ openssl pkg-config ];
