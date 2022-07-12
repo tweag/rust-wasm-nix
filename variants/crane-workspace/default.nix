@@ -9,7 +9,7 @@ let
 
   wasmTarget = "wasm32-unknown-unknown";
 
-  # wasmPkgs = import nixpkgs {
+  # pkgsWasm = import nixpkgs {
   #   inherit system;
   #   crossSystem = {
   #     config = "wasm32-unknown-wasi-unknown";

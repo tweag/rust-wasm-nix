@@ -5,7 +5,7 @@ let
     overlays = [cargo2nix.overlays.default];
   };
 
-  wasmPkgs = import nixpkgs {
+  pkgsWasm = import nixpkgs {
     inherit system;
     crossSystem = {
       system = "wasm32-wasi";
@@ -21,7 +21,7 @@ let
     packageFun = import ./Cargo.nix;
   };
 
-  rustPkgsWasm = wasmPkgs.rustBuilder.makePackageSet {
+  rustPkgsWasm = pkgsWasm.rustBuilder.makePackageSet {
     inherit rustVersion;
     packageFun = import ./Cargo.nix;
   };
