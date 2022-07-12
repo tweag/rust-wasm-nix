@@ -39,72 +39,75 @@ wasm-pack test --firefox --headless
 
 ## buildRustPackage
 
-Unfortunately, it isn't easy to have buildRustPackage build a WebAssembly package, because it insists on setting the `--target` flag to either the (native) host system, or to whatever you're cross-compiling against. The cross-compilation should actually work, but when configuring it Nix ends up building a Rust compiler from scratch where the target is set to WebAssembly everywhere. This eventually fails.
-
-
-
-## cargo2nix
-
-Following the cargo2nix instructions, we generate a `Cargo.nix` file by running:
+### Separate crates
 
 ```
-cd variants/cargo2nix-workspace
-nix run github:cargo2nix/cargo2nix
-git add Cargo.nix
+cd variants/buildRustPackage-separate
+nix build
 ```
 
-Then we can simply build and run our native app like this:
+This fails because it expects to find `/build/cats/Cargo.toml`.
+
+### Workspace
 
 ```
-nix run
+cd variants/buildRustPackage-workspace
+nix build
+ls -R result*
 ```
-
-However, the Wasm code does not get output by cargo2nix, and it is a known issue:
-
-https://github.com/cargo2nix/cargo2nix/issues/203
-
-After some debugging (with Alexei and Yorick) it turned out that the solution was simple, and fixed in https://github.com/cargo2nix/cargo2nix/pull/283. Until it gets merged, we run against `github:torhovland/cargo2nix/wasm`.
-
-So, in the end, we build our Wasm code like this:
-
-```
-cd variants/cargo2nix-workspace
-nix build .#wasm
-ls result/lib/wasm.wasm 
-```
-
-## crate2nix
-
-## dream2nix
 
 ## naersk
 
-### naersk and separate crates
+### Separate crates
 
-Having a shared library next to our two apps, using a path dependency, just doesn't work in naersk. See https://github.com/nix-community/naersk/issues/133.
+```
+cd variants/naersk-separate
+nix build
+```
 
-### naersk and a workspace
+This fails because it expects to find `/build/cats/Cargo.toml`.
 
-You can verify that the native Rust app works:
+### Workspace
 
 ```
 cd variants/naersk-workspace
 nix build
-./result/bin/app
-```
-
-And you can verify that the Wasm code also gets built:
-
-```
-cd variants/naersk-workspace
-nix build .#packages.x86_64-linux.wasm
-ls -l ./result/lib/wasm.wasm
-```
-
-Interestingly, trying to build both at the same time only leaves the default package (the native app) in the `result` directory:
-
-```
-nix build .#packages.x86_64-linux.app .#packages.x86_64-linux.wasm
+ls -R result*
 ```
 
 ## crane
+
+### Separate crates
+
+```
+cd variants/crane-separate
+nix build
+```
+
+This fails because it expects to find `/build/cats/Cargo.toml`.
+
+### Workspace
+
+```
+cd variants/crane-workspace
+nix build
+ls -R result*
+```
+
+## cargo2nix
+
+### Separate crates
+
+```
+cd variants/cargo2nix-separate
+nix build
+ls -R result*
+```
+
+### Workspace
+
+```
+cd variants/cargo2nix-workspace
+nix build
+ls -R result*
+```
