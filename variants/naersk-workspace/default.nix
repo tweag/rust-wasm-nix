@@ -23,13 +23,13 @@ in {
   app = naerskLib.buildPackage {
     name = "app";
     src = ./.;
-    nativeBuildInputs = with pkgs; [ openssl pkg-config ];
     cargoBuildOptions = x: x ++ [ "-p" "app" ];
+    nativeBuildInputs = [ pkgs.pkg-config ];
+    PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
   };
   wasm = naerskLibWasm.buildPackage {
     name = "wasm";
     src = ./.;
-    nativeBuildInputs = with pkgs; [ openssl pkg-config ];
     cargoBuildOptions = x: x ++ [ "-p" "wasm" ];
     copyLibs = true;
     CARGO_BUILD_TARGET = wasmTarget;
