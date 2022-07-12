@@ -1,7 +1,5 @@
 { pkgs, nixpkgs, system, cargo2nix }: 
 let
-  wasmTarget = "wasm32-unknown-unknown";
-
   pkgs = import nixpkgs {
     inherit system;
     overlays = [cargo2nix.overlays.default];
@@ -16,13 +14,17 @@ let
     overlays = [cargo2nix.overlays.default];
   };
 
+  rustVersion = "1.61.0";
+
+  wasmTarget = "wasm32-unknown-unknown";
+
   rustPkgs = pkgs.rustBuilder.makePackageSet {
-    rustVersion = "1.61.0";
+    inherit rustVersion;
     packageFun = import ./Cargo.nix;
   };
 
   rustPkgsWasm = wasmPkgs.rustBuilder.makePackageSet {
-    rustVersion = "1.61.0";
+    inherit rustVersion;
     packageFun = import ./Cargo.nix;
     target = wasmTarget;
   };
