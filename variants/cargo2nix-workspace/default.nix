@@ -10,7 +10,6 @@ let
   wasmPkgs = import nixpkgs {
     inherit system;
     crossSystem = {
-      config = "wasm32-unknown-wasi-unknown";
       system = "wasm32-wasi";
       useLLVM = true;
     };
