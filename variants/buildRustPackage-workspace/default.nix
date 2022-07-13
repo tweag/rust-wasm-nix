@@ -15,10 +15,10 @@ let
 
   common = {
     version = "0.0.1";
-    src = ./.;
+    src = ../cargo-workspace;
 
     cargoLock = {
-      lockFile = ./Cargo.lock;
+      lockFile = ../cargo-workspace/Cargo.lock;
     };
 
     nativeBuildInputs = [ pkgs.pkg-config ];

@@ -15,13 +15,13 @@ let
 in {
   app = naersk.buildPackage {
     name = "app";
-    src = ./app;
+    src = ../cargo-separate/app;
     nativeBuildInputs = [ pkg-config ];
     PKG_CONFIG_PATH = "${openssl.dev}/lib/pkgconfig";
   };
   wasm = naerskWasm.buildPackage {
     name = "wasm";
-    src = ./wasm;
+    src = ../cargo-separate/wasm;
     copyLibs = true;
     CARGO_BUILD_TARGET = wasmTarget;
   };

@@ -13,11 +13,13 @@ let
   rustPkgs = rustBuilder.makePackageSet {
     inherit rustVersion;
     packageFun = import ./Cargo.nix;
+    workspaceSrc = ../cargo-workspace;
   };
 
   rustPkgsWasm = pkgsWasm.rustBuilder.makePackageSet {
     inherit rustVersion;
     packageFun = import ./Cargo.nix;
+    workspaceSrc = ../cargo-workspace;
   };
 in {
   app = (rustPkgs.workspace.app {}).bin;

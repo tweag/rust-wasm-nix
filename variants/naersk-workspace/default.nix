@@ -15,14 +15,14 @@ let
 in {
   app = naersk.buildPackage {
     name = "app";
-    src = ./.;
+    src = ../cargo-workspace;
     cargoBuildOptions = x: x ++ [ "-p" "app" ];
     nativeBuildInputs = [ pkg-config ];
     PKG_CONFIG_PATH = "${openssl.dev}/lib/pkgconfig";
   };
   wasm = naerskWasm.buildPackage {
     name = "wasm";
-    src = ./.;
+    src = ../cargo-workspace;
     cargoBuildOptions = x: x ++ [ "-p" "wasm" ];
     copyLibs = true;
     CARGO_BUILD_TARGET = wasmTarget;

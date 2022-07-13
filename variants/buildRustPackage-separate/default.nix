@@ -22,19 +22,19 @@ let
 in {
   app = rustPlatform.buildRustPackage (common // {
     pname = "app";
-    src = ./app;
+    src = ../cargo-separate/app;
     
     cargoLock = {
-      lockFile = ./app/Cargo.lock;
+      lockFile = ../cargo-separate/app/Cargo.lock;
     };
   });
 
   wasm = rustPlatformWasm.buildRustPackage (common // {
     pname = "wasm";
-    src = ./wasm;
+    src = ../cargo-separate/wasm;
     
     cargoLock = {
-      lockFile = ./wasm/Cargo.lock;
+      lockFile = ../cargo-separate/wasm/Cargo.lock;
     };
 
     buildPhase = ''

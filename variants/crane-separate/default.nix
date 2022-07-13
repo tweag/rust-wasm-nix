@@ -16,12 +16,12 @@ let
 in
 {
   app = crane.buildPackage {
-    src = ./app;
+    src = ../cargo-separate/app;
     nativeBuildInputs = [ pkg-config ];
     PKG_CONFIG_PATH = "${openssl.dev}/lib/pkgconfig";
   };
   wasm = craneWasm.buildPackage {
-    src = ./wasm;
+    src = ../cargo-separate/wasm;
     cargoExtraArgs = "--target ${wasmTarget}";
     
     # Override crane's use of --workspace, which tries to build everything.
