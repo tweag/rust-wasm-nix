@@ -1,15 +1,10 @@
-{ pkgs, nixpkgs, system, makeRustPlatform, rust-overlay }:
+{ pkg-config, openssl, rustPlatform, makeRustPlatform, rust-bin }:
 let
-  rustPkgs = import nixpkgs {
-    inherit system;
-    overlays = [ (import rust-overlay) ];
-  };
-
   rustVersion = "1.61.0";
 
   wasmTarget = "wasm32-unknown-unknown";
 
-  rustWithWasmTarget = rustPkgs.rust-bin.stable.${rustVersion}.default.override {
+  rustWithWasmTarget = rust-bin.stable.${rustVersion}.default.override {
     targets = [ wasmTarget ];
   };
 
@@ -21,25 +16,25 @@ let
   common = {
     version = "0.0.1";
 
-    nativeBuildInputs = [ pkgs.pkg-config ];
-    PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
+    nativeBuildInputs = [ pkg-config ];
+    PKG_CONFIG_PATH = "${openssl.dev}/lib/pkgconfig";
   };
 in {
-  app = pkgs.rustPlatform.buildRustPackage (common // {
+  app = rustPlatform.buildRustPackage (common // {
     pname = "app";
-    src = ./app;
+    src = ../cargo-separate/app;
     
     cargoLock = {
-      lockFile = ./app/Cargo.lock;
+      lockFile = ../cargo-separate/app/Cargo.lock;
     };
   });
 
   wasm = rustPlatformWasm.buildRustPackage (common // {
     pname = "wasm";
-    src = ./wasm;
+    src = ../cargo-separate/wasm;
     
     cargoLock = {
-      lockFile = ./wasm/Cargo.lock;
+      lockFile = ../cargo-separate/wasm/Cargo.lock;
     };
 
     buildPhase = ''

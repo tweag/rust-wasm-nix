@@ -1,35 +1,28 @@
-{ pkgs, nixpkgs, system, crane, rust-overlay }: 
+{ pkg-config, openssl, crane, rust-bin }: 
 let
-  rustPkgs = import nixpkgs {
-    inherit system;
-    overlays = [ (import rust-overlay) ];
-  };
-
   rustVersion = "1.61.0";
 
   wasmTarget = "wasm32-unknown-unknown";
 
-  rustWithWasmTarget = rustPkgs.rust-bin.stable.${rustVersion}.default.override {
-      targets = [ wasmTarget ];
+  rustWithWasmTarget = rust-bin.stable.${rustVersion}.default.override {
+    targets = [ wasmTarget ];
   };
-
-  craneLib = crane.mkLib pkgs;
 
   # NB: we don't need to overlay our custom toolchain for the *entire*
   # pkgs (which would require rebuidling anything else which uses rust).
   # Instead, we just want to update the scope that crane will use by appending
   # our specific toolchain there.
-  craneLibWasm = craneLib.overrideToolchain rustWithWasmTarget;
+  craneWasm = crane.overrideToolchain rustWithWasmTarget;
 in
 {
-  app = craneLib.buildPackage {
-    src = ./.;
+  app = crane.buildPackage {
+    src = ../cargo-workspace;
     cargoExtraArgs = "-p app";
-    nativeBuildInputs = [ pkgs.pkg-config ];
-    PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
+    nativeBuildInputs = [ pkg-config ];
+    PKG_CONFIG_PATH = "${openssl.dev}/lib/pkgconfig";
   };
-  wasm = craneLibWasm.buildPackage {
-    src = ./.;
+  wasm = craneWasm.buildPackage {
+    src = ../cargo-workspace;
     cargoExtraArgs = "-p wasm --target ${wasmTarget}";
     
     # Override crane's use of --workspace, which tries to build everything.
