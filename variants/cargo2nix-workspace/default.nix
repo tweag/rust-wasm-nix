@@ -1,22 +1,16 @@
-{ pkgs, nixpkgs, system, cargo2nix }: 
+{ pkgs, rustBuilder }: 
 let
-  pkgs = import nixpkgs {
-    inherit system;
-    overlays = [cargo2nix.overlays.default];
-  };
-
-  pkgsWasm = import nixpkgs {
-    inherit system;
+  pkgsWasm = import pkgs.path {
+    inherit (pkgs) system overlays;
     crossSystem = {
       system = "wasm32-wasi";
       useLLVM = true;
     };
-    overlays = [cargo2nix.overlays.default];
   };
 
   rustVersion = "1.61.0";
 
-  rustPkgs = pkgs.rustBuilder.makePackageSet {
+  rustPkgs = rustBuilder.makePackageSet {
     inherit rustVersion;
     packageFun = import ./Cargo.nix;
   };

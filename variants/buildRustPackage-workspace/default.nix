@@ -1,15 +1,10 @@
-{ pkgs, nixpkgs, system, makeRustPlatform, rust-overlay }:
+{ pkgs, makeRustPlatform }:
 let
-  rustPkgs = import nixpkgs {
-    inherit system;
-    overlays = [ (import rust-overlay) ];
-  };
-
   rustVersion = "1.61.0";
 
   wasmTarget = "wasm32-unknown-unknown";
 
-  rustWithWasmTarget = rustPkgs.rust-bin.stable.${rustVersion}.default.override {
+  rustWithWasmTarget = pkgs.rust-bin.stable.${rustVersion}.default.override {
     targets = [ wasmTarget ];
   };
 

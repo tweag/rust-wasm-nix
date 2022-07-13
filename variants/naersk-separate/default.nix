@@ -1,32 +1,25 @@
-{ pkgs, nixpkgs, system, naersk, rust-overlay }: 
+{ pkg-config, openssl, rust-bin, naersk }: 
 let
-  rustPkgs = import nixpkgs {
-    inherit system;
-    overlays = [ (import rust-overlay) ];
-  };
-
   rustVersion = "1.61.0";
 
   wasmTarget = "wasm32-unknown-unknown";
 
-  rustWithWasmTarget = rustPkgs.rust-bin.stable.${rustVersion}.default.override {
+  rustWithWasmTarget = rust-bin.stable.${rustVersion}.default.override {
     targets = [ wasmTarget ];
   };
 
-  naerskLib = pkgs.callPackage naersk {};
-
-  naerskLibWasm = pkgs.callPackage naersk {
+  naerskWasm = naersk.override {
     cargo = rustWithWasmTarget;
     rustc = rustWithWasmTarget;
   };
 in {
-  app = naerskLib.buildPackage {
+  app = naersk.buildPackage {
     name = "app";
     src = ./app;
-    nativeBuildInputs = [ pkgs.pkg-config ];
-    PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
+    nativeBuildInputs = [ pkg-config ];
+    PKG_CONFIG_PATH = "${openssl.dev}/lib/pkgconfig";
   };
-  wasm = naerskLibWasm.buildPackage {
+  wasm = naerskWasm.buildPackage {
     name = "wasm";
     src = ./wasm;
     copyLibs = true;
