@@ -16,7 +16,6 @@ let
   naerskLib = pkgs.callPackage naersk {};
 
   naerskLibWasm = pkgs.callPackage naersk {
-    cargo = rustWithWasmTarget;
     rustc = rustWithWasmTarget;
   };
 in {
