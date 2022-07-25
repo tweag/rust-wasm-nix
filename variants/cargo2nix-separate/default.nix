@@ -23,7 +23,17 @@ let
 
   rustPkgsWasm = pkgsWasm.rustBuilder.makePackageSet {
     inherit rustVersion;
-    packageFun = import ./wasm/Cargo.nix;
+    target = "wasm32-unknown-unknown";
+
+    # cargo2nix thinks we're building for wasm32-unknown-wasi now.
+    # We need to guide it to wasm32-unknown-unknown instead.
+    packageFun = attrs: import ./wasm/Cargo.nix (attrs // {
+      hostPlatform = attrs.hostPlatform // {
+        parsed = attrs.hostPlatform.parsed // {
+          kernel.name = "unknown";
+        };
+      };
+    });
   };
 in {
   app = (rustPkgs.workspace.app {}).bin;
