@@ -7,4 +7,4 @@ edition = "2021"
 
 [dependencies]
 cats = { path = "../cats" }
-tokio = { version = "1.19.2", features = ["full"] }
+tokio = { version = "1.20.3", features = ["full"] }
